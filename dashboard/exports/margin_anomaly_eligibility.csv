@@ -1,0 +1,11 @@
+company,metric,observations,minimum_observations,status
+HPE,gross_margin,22,20,scored retrospectively
+HPE,operating_margin,41,20,scored retrospectively
+DELL,gross_margin,45,20,scored retrospectively
+DELL,operating_margin,38,20,scored retrospectively
+CSCO,gross_margin,64,20,scored retrospectively
+CSCO,operating_margin,61,20,scored retrospectively
+IBM,gross_margin,57,20,scored retrospectively
+IBM,operating_margin,0,20,insufficient observations
+NTAP,gross_margin,59,20,scored retrospectively
+NTAP,operating_margin,53,20,scored retrospectively

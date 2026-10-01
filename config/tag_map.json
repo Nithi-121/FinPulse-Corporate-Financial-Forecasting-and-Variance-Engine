@@ -1,0 +1,17 @@
+{
+  "revenue": [
+    ["RevenueFromContractWithCustomerExcludingAssessedTax"],
+    ["SalesRevenueNet"],
+    ["Revenues"]
+  ],
+  "cost_of_revenue": [
+    ["CostOfRevenue"],
+    ["CostOfGoodsAndServicesSold"],
+    ["CostOfGoodsSold", "CostOfServices"]
+  ],
+  "gross_profit": [["GrossProfit"]],
+  "operating_income": [["OperatingIncomeLoss"]],
+  "net_income": [["NetIncomeLoss"], ["ProfitLoss"]],
+  "research_and_development": [["ResearchAndDevelopmentExpense"]],
+  "selling_general_and_administrative": [["SellingGeneralAndAdministrativeExpense"]]
+}

@@ -1,0 +1,13 @@
+requests>=2.32,<3
+pandas>=2.2,<3
+pyarrow>=17,<25
+duckdb>=1.1,<2
+statsmodels>=0.14,<1
+prophet>=1.1,<2
+xgboost>=2,<4
+scikit-learn>=1.5,<2
+matplotlib>=3.9,<4
+seaborn>=0.13,<1
+jupyterlab>=4,<5
+streamlit>=1.42,<2
+pytest>=8,<9
