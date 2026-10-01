@@ -1,6 +1,7 @@
 # 📊 FinPulse: Complete Project Master Report & Documentation
 
 > **Project Name:** FinPulse — Investor-Grade Financial Analytics & Forecasting Platform  
+> **Live Web App:** [https://fin-pulse-corporate-financial-forecasting-and-varian-rcnrdzwgk.vercel.app/](https://fin-pulse-corporate-financial-forecasting-and-varian-rcnrdzwgk.vercel.app/)  
 > **Target Audience:** Corporate Finance, CFO Office, Equity Research & Strategy Teams  
 > **Author / Developer:** Pair-Programmed with Antigravity AI  
 > **Date:** October 2026  

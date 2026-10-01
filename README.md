@@ -7,15 +7,18 @@
     <em>Turning complex SEC EDGAR XBRL filings into comparable quarterly intelligence, leakage-free forecasts, and machine learning audit triggers.</em>
   </p>
   <p align="center">
+    <a href="https://fin-pulse-corporate-financial-forecasting-and-varian-rcnrdzwgk.vercel.app/"><img src="https://img.shields.io/badge/Live_Demo-Vercel_App-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" /></a>
     <a href="#-visual-showcase"><img src="https://img.shields.io/badge/Status-Production--Ready-10B981?style=for-the-badge&logo=checkmarx" alt="Status" /></a>
     <a href="#-tech-stack"><img src="https://img.shields.io/badge/Python-3.14-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" /></a>
     <a href="#-tech-stack"><img src="https://img.shields.io/badge/React-18.3-22D3EE?style=for-the-badge&logo=react&logoColor=white" alt="React" /></a>
     <a href="#-tech-stack"><img src="https://img.shields.io/badge/DuckDB-OLAP-FFF000?style=for-the-badge&logo=duckdb&logoColor=black" alt="DuckDB" /></a>
     <a href="#-tech-stack"><img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" /></a>
     <a href="#-tech-stack"><img src="https://img.shields.io/badge/TailwindCSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" /></a>
-    <a href="#-license"><img src="https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge" alt="License" /></a>
   </p>
 </p>
+
+> 🌐 **Live Interactive Web Dashboard:** **[https://fin-pulse-corporate-financial-forecasting-and-varian-rcnrdzwgk.vercel.app/](https://fin-pulse-corporate-financial-forecasting-and-varian-rcnrdzwgk.vercel.app/)**  
+> *Explore live KPIs, interactive area forecasts, margin peer rankings, and anomaly audit drawers.*
 
 ---
 
