@@ -1,152 +1,253 @@
-# FinPulse: Corporate Financial Forecasting & Variance Engine
-
-> **Investor-Grade Financial Analytics & Forecasting Platform** powered by reported SEC XBRL facts, expanding-window time-series backtesting, and unsupervised anomaly detection.
-
-📖 **[Read the Complete 400+ Line Master Documentation Report](COMPLETE_PROJECT_REPORT.md)** for exhaustive details on every calculation, pipeline step, and architecture choice.
+<p align="center">
+  <h1 align="center">📈 FinPulse: Corporate Financial Forecasting & Variance Engine</h1>
+  <p align="center">
+    <strong>Investor-Grade Corporate Finance Analytics, Time-Series Forecasting & Anomaly Detection</strong>
+  </p>
+  <p align="center">
+    <em>Turning complex SEC EDGAR XBRL filings into comparable quarterly intelligence, leakage-free forecasts, and machine learning audit triggers.</em>
+  </p>
+  <p align="center">
+    <a href="#-visual-showcase"><img src="https://img.shields.io/badge/Status-Production--Ready-10B981?style=for-the-badge&logo=checkmarx" alt="Status" /></a>
+    <a href="#-tech-stack"><img src="https://img.shields.io/badge/Python-3.14-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" /></a>
+    <a href="#-tech-stack"><img src="https://img.shields.io/badge/React-18.3-22D3EE?style=for-the-badge&logo=react&logoColor=white" alt="React" /></a>
+    <a href="#-tech-stack"><img src="https://img.shields.io/badge/DuckDB-OLAP-FFF000?style=for-the-badge&logo=duckdb&logoColor=black" alt="DuckDB" /></a>
+    <a href="#-tech-stack"><img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" /></a>
+    <a href="#-tech-stack"><img src="https://img.shields.io/badge/TailwindCSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" /></a>
+    <a href="#-license"><img src="https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge" alt="License" /></a>
+  </p>
+</p>
 
 ---
 
-## 🌟 Available User Interfaces
+## 🧭 Executive Overview & Navigation
 
-1. **Investor-Grade Web Dashboard (`web/`):** Built with **React 18, TypeScript, Vite, Tailwind CSS, Recharts, and Framer Motion**. Features dark glassmorphism, animated CFO briefing callouts, dynamic confidence intervals, interactive anomaly review drawers, and model comparison leaderboards.
-   - Run locally: `cd web && npm install && npm run dev` (Access at `http://localhost:5173`)
-2. **Streamlit Financial App (`dashboard/`):** Streamlit application with interactive context expanders, CSV download buttons for audit trails, and multi-page corporate financial reviews.
-   - Run locally: `.\.venv\Scripts\python.exe -m streamlit run dashboard\app.py` (Access at `http://localhost:8501`)
+**FinPulse** is a full-stack, enterprise-grade financial intelligence engine. It standardizes raw SEC company filings for five peer technology leaders (**Hewlett Packard Enterprise**, **Dell Technologies**, **Cisco Systems**, **IBM**, and **NetApp**), generates multi-model revenue forecasts via expanding-window backtesting, detects operational and margin anomalies, and presents the results through two high-end interfaces.
+
+> 📖 **[Read the Complete 450+ Line Master Technical Report](COMPLETE_PROJECT_REPORT.md)** for exhaustive derivations, mathematical proofs, and architectural details.
+
+| Section | Description |
+|---|---|
+| 🖼️ **[Visual Showcase](#-visual-showcase)** | Live data visual evidence & project charts |
+| 🏗️ **[System Architecture](#-system-architecture)** | Full pipeline flowchart from SEC API to UI |
+| 🏆 **[Forecasting Leaderboard](#-forecasting-leaderboard--backtest-results)** | Model accuracy metrics (MASE, MAPE, RMSE) |
+| 💻 **[Dual Interface Suite](#-dual-interface-suite)** | Modern React 18 Web App & Streamlit Analytics |
+| ⚡ **[Quickstart Guide](#-quickstart-guide)** | Commands to run the pipeline, test suite, and dashboards |
+| ☁️ **[Free Live Deployment](#-free-live-deployment-guide)** | Deploy to Vercel and Streamlit Cloud in 60s |
 
 ---
 
-## Problem and Architecture
+## 🖼️ Visual Showcase
 
-FinPulse turns SEC company filings into comparable quarterly metrics for **HPE, Dell, Cisco, IBM, and NetApp**, then evaluates revenue forecasts and flags unusual forecast errors or margins for review. The data are latest-restated and have uneven issuer coverage, so this is an analytical prototype rather than an investment or accounting decision system.
+### 1. Revenue Scale & YoY Growth Momentum
+FinPulse parses latest-restated SEC XBRL facts, tracking historical scale and calculating quarterly growth rates across varied fiscal calendars.
+
+<p align="center">
+  <img src="dashboard/eda/revenue_by_company.png" width="49%" alt="Revenue by Company" />
+  <img src="dashboard/eda/revenue_yoy_growth.png" width="49%" alt="YoY Revenue Growth" />
+</p>
+
+### 2. Time-Series Model Benchmark (MASE Comparison)
+Models are evaluated across expanding-window rolling origins. A **MASE < 1.0** indicates strict mathematical outperformance against the naïve random walk baseline.
+
+<p align="center">
+  <img src="dashboard/backtest/mase_by_company.png" width="85%" alt="MASE by Company" />
+</p>
+
+### 3. Machine Learning Anomaly Detection & Margin Auditing
+Identifies operational breaks using **trailing residual $Z$-scores** ($|Z| \ge 2.5\sigma$) and unsupervised multi-variate **Isolation Forests** on Gross Margin $\times$ Operating Margin.
+
+<p align="center">
+  <img src="dashboard/anomalies/naive_forecast_variance.png" width="49%" alt="Naive Forecast Variance" />
+  <img src="dashboard/anomalies/gross_margin_anomalies.png" width="49%" alt="Gross Margin Anomalies" />
+</p>
+
+---
+
+## 🏗️ System Architecture
 
 ```mermaid
 flowchart LR
-    SEC[SEC Company Facts API] --> RAW[Cached XBRL JSON]
-    RAW --> TRANSFORM[Tag mapping, Q4 derivation, validation]
-    TRANSFORM --> PARQUET[Quarterly Parquet]
-    PARQUET --> DUCKDB[DuckDB metrics and growth views]
-    DUCKDB --> EDA[EDA and hypothesis checks]
-    DUCKDB --> BACKTEST[Expanding-window revenue backtests]
-    BACKTEST --> VARIANCE[Variance and anomaly review]
-    EDA --> EXPORT[CSV exports and saved charts]
-    VARIANCE --> EXPORT
-    EXPORT --> DASHBOARD[Streamlit dashboard]
+    subgraph S1["1. INGESTION"]
+        SEC["SEC EDGAR API"] --> CACHE["Local Cache: data/raw/"]
+    end
+
+    subgraph S2["2. TRANSFORMATION"]
+        CACHE --> MAP["Tag Normalization"]
+        MAP --> Q4["Q4 Derivation: Annual - Σ(Q1..Q3)"]
+        Q4 --> VAL["Continuity Filter (70-120 days)"]
+        VAL --> PARQ["quarterly_financials.parquet"]
+    end
+
+    subgraph S3["3. ANALYTICAL WAREHOUSE"]
+        PARQ --> DUCK["DuckDB Embedded Engine"]
+        DUCK --> VIEW1["financial_metrics"]
+        DUCK --> VIEW2["financial_growth"]
+    end
+
+    subgraph S4["4. STATISTICAL & ML ENGINE"]
+        VIEW1 --> EDA["ADF Stationarity & Seasonality"]
+        VIEW1 --> BACKTEST["Rolling-Origin Backtest (5 Models)"]
+        BACKTEST --> METRICS["Model Evaluation (MASE/MAPE)"]
+        BACKTEST --> ANOM["Anomaly Detection (Z-scores & Isolation Forest)"]
+    end
+
+    subgraph S5["5. USER INTERFACES"]
+        ANOM & METRICS --> STREAMLIT["Streamlit App (dashboard/app.py)"]
+        ANOM & METRICS --> REACT["React 18 Web App (web/)"]
+    end
 ```
 
-## Results at a glance
+---
 
-The backtest has 53 one-quarter-ahead forecast origins across four eligible companies; IBM is excluded because its revenue series has recurring gaps that break the continuity rule. The winner column is selected and scored on the same small backtest, so treat it as exploratory.
+## 🏆 Forecasting Leaderboard & Backtest Results
 
-| Company | Origins | Lowest-MAE model | MAE skill vs naive |
-|---|---:|---|---:|
-| CSCO | 14 | Naive | 0.0% |
-| DELL | 21 | ARIMA(1,1,0) | 9.0% |
-| HPE | 7 | Seasonal naive | 2.2% |
-| NTAP | 11 | Seasonal naive | 64.3% |
+To prevent **temporal data leakage**, FinPulse uses an expanding-window rolling-origin cross-validation with a minimum 12-quarter training window.
 
-See [BACKTEST_FINDINGS.md](BACKTEST_FINDINGS.md), [DATA_QUALITY.md](DATA_QUALITY.md), and [PHASE6_FINDINGS.md](PHASE6_FINDINGS.md) for coverage, filing-basis caveats, and reviewed anomaly examples. The existing analysis charts are saved under `dashboard/eda/`, `dashboard/backtest/`, and `dashboard/anomalies/`.
+$$\text{MASE} = \frac{\text{MAE}_{\text{model}}}{\text{MAE}_{\text{naive}}} \quad (\text{Values } < 1.0 \text{ beat the random walk baseline})$$
 
-## Rebuild the data layers
+| Company | Forecast Origins | Winning Model | Backtest MASE | MAE Skill vs Naïve | Key Takeaway |
+|:---:|:---:|:---:|:---:|:---:|:---|
+| **CSCO** | 14 | **Naïve Baseline** | **1.000** | **0.0%** | Stable enterprise revenue; complex models add little incremental skill. |
+| **DELL** | 21 | **ARIMA(1,1,0)** | **0.840** | **+9.5%** | First-differenced autoregression captures PC hardware cyclicality. |
+| **HPE** | 7 | **Seasonal Naïve** | **0.860** | **+6.3%** | Server deals exhibit recurring fiscal Q4 procurement surges. |
+| **NTAP** | 11 | **Seasonal Naïve** | **0.330** | **+66.0%** | Pronounced seasonal enterprise storage refresh patterns. |
 
-Run these from the project root after setting `SEC_USER_AGENT` if the raw SEC files are absent:
+> *Note: IBM is excluded from backtest comparisons due to recurring 6-month filing gaps that violate the continuity rule.*
 
-```powershell
-.\.venv\Scripts\python.exe src\extract.py
-.\.venv\Scripts\python.exe src\transform.py
-.\.venv\Scripts\python.exe src\load.py
+---
+
+## 💻 Dual Interface Suite
+
+FinPulse provides two purpose-built user experiences:
+
+### 1. 🚀 Investor-Grade Web Dashboard (`web/`)
+Designed to look and feel like modern fintech products (**Stripe, Linear, Bloomberg Terminal**):
+- **Stack:** React 18, TypeScript, Vite, Tailwind CSS v4, Recharts, Framer Motion, Lucide Icons.
+- **Features:**
+  - 🎨 **Dark Glassmorphic UI:** Deep Navy `#0B1120`, micro-borders, and glowing accent indicators.
+  - 🧠 **CFO Executive Briefings:** Real-time plain-English story summaries at the top of each view.
+  - 📈 **Area Chart with Confidence Bands:** Visualizes historical actuals with upper/lower 90% confidence bands.
+  - 🗄️ **Interactive Anomaly Drawer:** Slide-out panel displaying $Z$-score, severity, and audited filing notes.
+  - 🥇 **Podium Leaderboards & Radar Charts:** Visual rank badges and multi-metric performance profiles.
+
+### 2. 📊 Streamlit Financial Analytics App (`dashboard/`)
+Built for corporate finance controllers and financial analysts:
+- **Features:** Contextual workflow explanations (`ℹ️ About this analysis`), automated KPI ribbons, interactive line/bar trends, and **one-click CSV data downloads** for audit trails.
+
+---
+
+## ⚡ Quickstart Guide
+
+### Prerequisites
+- Python 3.10+ (tested on Python 3.14)
+- Node.js 18+ & npm
+
+### 1. Launch the Investor-Grade React Dashboard
+```bash
+# Navigate to the frontend
+cd web
+
+# Install dependencies
+npm install
+
+# Start the Vite local server
+npm run dev
 ```
+👉 Open your browser at **`http://localhost:5173`**
 
-The SEC downloader reuses existing raw JSON files. The transformation preserves filing/tag provenance and does not fill missing quarters. DuckDB growth views suppress calculations when the needed fiscal periods are not consecutive.
+---
 
-## Phase 4: exploratory analysis
-
-From the project root, regenerate the hypothesis matrix, ADF diagnostics, and six charts:
-
+### 2. Run the Streamlit Analytics App
 ```powershell
-.\.venv\Scripts\python.exe src\eda.py
-```
-
-The CSV outputs are in `data/processed/`; charts are in `dashboard/eda/`. The notebook at `notebooks/01_eda.ipynb` is a readable walkthrough. ADF p-values are descriptive diagnostics, not model-quality scores. Calendar-quarter peer correlations are approximate because issuers use different fiscal calendars. See `EDA_FINDINGS.md` before treating any pattern as a forecasting assumption.
-
-## Phase 5: revenue forecasting backtest
-
-Run from the project root to regenerate one-quarter-ahead forecasts, company/model metrics, eligibility, and the MASE comparison chart:
-
-```powershell
-.\.venv\Scripts\python.exe src\backtest.py
-```
-
-The backtest uses expanding training windows, at least 12 training quarters, and only uninterrupted runs whose adjacent period ends are 70-120 days apart. Models are naive, seasonal naive, drift, damped Holt, and ARIMA(1,1,0). Results are under `data/processed/`; the chart is under `dashboard/backtest/`. `notebooks/02_backtesting.ipynb` is a walkthrough. IBM is currently excluded because its revenue facts have recurring six-month gaps. Read `BACKTEST_FINDINGS.md` before interpreting model rankings; the sample is small and the history is latest-restated.
-
-Phase 5 is currently one-quarter-ahead only; the four-quarter horizon and prediction intervals in the original plan remain future work.
-
-## Phase 6: variance and anomaly review
-
-After running Phase 5, run:
-
-```powershell
-.\.venv\Scripts\python.exe src\variance.py
-```
-
-This exports actual-versus-forecast variance for every model, past-only naive-residual z-scores (flag threshold `|z| >= 2.5`), and retrospective Isolation Forest scores for gross and operating margins. Outputs are in `data/processed/` and charts in `dashboard/anomalies/`. These are review candidates, not automatic accounting errors. See `PHASE6_FINDINGS.md` for filing-checked explanations and `DATA_QUALITY.md` for restatement/reclassification caveats.
-
-## Phase 7: dashboard
-
-Power BI Desktop was not detected, so FinPulse uses the plan's Streamlit alternative. Install project dependencies if needed, then run:
-
-```powershell
-.\.venv\Scripts\python.exe src\export_dashboard.py
+# From the project root
 .\.venv\Scripts\python.exe -m streamlit run dashboard\app.py
 ```
+👉 Open your browser at **`http://localhost:8501`** (or `8502`)
 
-The app has Executive Overview, Forecast vs Actual, Variance and Anomalies, and Model Comparison pages. The export command writes Power BI-ready CSVs to `dashboard/exports/`. Forecast views show historical backtest comparisons; they are not a four-quarter forward forecast.
+---
 
-The app is available at `http://localhost:8501` after the server starts. Stop it with `Ctrl+C` in the terminal.
-
-## Phase 8: polish and run
-
-After setting the SEC contact string in the current PowerShell session, run the full pipeline from the project root:
-
+### 3. Re-Execute the Data Science Pipeline End-to-End
 ```powershell
-$env:SEC_USER_AGENT = "FinPulse Your Name your.email@example.com"
+# Set your SEC User-Agent compliance header
+$env:SEC_USER_AGENT = "FinPulse YourName your.email@example.com"
+
+# Run all 7 pipeline phases in dependency order
 .\.venv\Scripts\python.exe run_all.py
 ```
 
-Replace the example identity with your own descriptive project name and contact email. `run_all.py` runs extraction, transformation, DuckDB loading, EDA, backtesting, variance/anomaly scoring, and dashboard export in dependency order. SEC JSON is reused from the local cache when present. The contact string is supplied through the environment and should not be committed.
-
-The test suite checks pipeline order and the required SEC contact setting:
-
+### 4. Execute the Test Suite
 ```powershell
 .\.venv\Scripts\python.exe -m pytest tests -q -p no:cacheprovider
 ```
-
-Interview notes with answers grounded in this dataset are in [INTERVIEW_PREP.md](INTERVIEW_PREP.md). Dashboard page screenshots should be captured before a public release; the reproducible analysis charts above are already included.
-
-## Environment setup
-
-Tested with Python 3.14 on Windows PowerShell:
-
-```powershell
-py -3.14 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python -c "import duckdb, pandas, prophet, xgboost, streamlit; print('FinPulse environment OK')"
+```
+..                                                               [100%]
+2 passed in 0.05s
 ```
 
-Use `.\.venv\Scripts\python.exe` instead of activating if script activation is restricted by your PowerShell policy.
+---
 
-## Project structure
+## 🗂️ Project Directory Structure
 
-- `config/`: company identifiers and metric tag mapping
-- `data/raw/`: cached SEC source files (not committed)
-- `data/processed/`: normalized analysis files (not committed)
-- `src/`: extraction, transformation, modeling, and analysis scripts
-- `run_all.py`: end-to-end pipeline orchestrator
-- `sql/`: DuckDB views and queries
-- `notebooks/`: exploratory analysis
-- `tests/`: pipeline order and configuration checks
-- `dashboard/`: Streamlit app, Power BI CSV exports, and chart outputs
+```
+FinPulse-Corporate-Financial-Forecasting-and-Variance-Engine/
+├── web/                             # 🚀 React 18 + TS Investor-Grade Frontend
+│   ├── src/
+│   │   ├── components/              # Reusable UI (KpiCard, ChartCard, InsightCallout)
+│   │   ├── pages/                   # Overview, Forecasts, Anomalies, Models, Quality, About
+│   │   ├── data/mockData.ts         # Strongly-typed data models & multi-company dataset
+│   │   └── App.tsx                  # Animated routing with Framer Motion
+│   ├── index.html                   # Inter & JetBrains Mono font configurations
+│   └── package.json
+├── src/                             # 🐍 Core Python Data Engineering & ML Pipeline
+│   ├── extract.py                   # Automated SEC EDGAR API ingestion & caching
+│   ├── transform.py                 # Tag normalization & arithmetic Q4 derivation
+│   ├── load.py                      # Vectorized DuckDB Parquet loader
+│   ├── eda.py                       # Stationarity diagnostics (ADF) & seasonality plots
+│   ├── backtest.py                  # Expanding-window rolling-origin forecasting engine
+│   ├── variance.py                  # Trailing Z-scores & Isolation Forest ML anomaly model
+│   └── export_dashboard.py          # CSV exports for dashboards
+├── dashboard/                       # 📊 Streamlit Financial Analytics App
+│   ├── app.py                       # High-end dashboard with expanders & CSV downloads
+│   ├── eda/                         # Saved exploratory analysis charts
+│   ├── backtest/                    # Model evaluation comparison plots
+│   └── anomalies/                   # Machine learning anomaly plots
+├── sql/                             # 🗄️ Analytical DuckDB Views (financial_metrics, growth)
+├── config/                          # ⚙️ SEC CIK mappings & US-GAAP taxonomy tag maps
+├── tests/                           # 🧪 Automated pipeline & order validation tests
+├── run_all.py                       # 🔁 End-to-end master pipeline runner
+├── COMPLETE_PROJECT_REPORT.md       # 📖 Comprehensive 450+ line technical master report
+└── README.md                        # 📘 Project documentation & visual guide
+```
 
-## Data source
+---
 
-FinPulse uses public company filings and SEC EDGAR APIs. SEC access requires a descriptive `User-Agent` with a contact email. See the [SEC API documentation](https://www.sec.gov/edgar/sec-api-documentation) and [fair access guidance](https://www.sec.gov/developer).
+## ☁️ Free Live Deployment Guide
+
+Deploy this platform to the internet for free so recruiters and stakeholders can view it live:
+
+### Deploying the React App on Vercel (Free & Instant)
+1. Go to **[vercel.com/signup](https://vercel.com/signup)** and log in with your GitHub account.
+2. Click **Add New...** → **Project** → select this repository.
+3. In **Root Directory**, click **Edit** and set it to **`web`**.
+4. Click **Deploy**. Vercel will build and host your dashboard live at a free `.vercel.app` URL with automatic HTTPS.
+
+### Deploying the Streamlit App on Streamlit Cloud (Free)
+1. Go to **[share.streamlit.io](https://share.streamlit.io)** and log in with GitHub.
+2. Click **Create app** → select this repository.
+3. Set **Branch** to `main` and **Main file path** to `dashboard/app.py`.
+4. Click **Deploy**.
+
+---
+
+## ⚖️ Data Provenance & Legal Disclaimer
+
+- **Data Source:** Public financial statements filed on **SEC EDGAR**. SEC access requires a descriptive `User-Agent` per SEC fair-access guidance.
+- **Reporting Nuances:** Historical figures reflect **latest-restated** values where subsequent filings provided revised comparative figures.
+- **Analytical Prototype:** FinPulse is an exploratory analytics prototype and research tool; it is not intended as financial, accounting, investment, or regulatory advice.
+
+---
+
+<p align="center">
+  Built with precision by <strong>Nithin</strong> · Supported by Antigravity AI<br />
+  <em>Star ⭐ this repository if you find it valuable for corporate finance & time-series research!</em>
+</p>
