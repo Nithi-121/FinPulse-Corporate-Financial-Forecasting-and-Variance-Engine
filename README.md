@@ -1,14 +1,23 @@
-# FinPulse
+# FinPulse: Corporate Financial Forecasting & Variance Engine
 
-Corporate financial forecasting and variance analysis using reported SEC XBRL facts.
+> **Investor-Grade Financial Analytics & Forecasting Platform** powered by reported SEC XBRL facts, expanding-window time-series backtesting, and unsupervised anomaly detection.
 
-## Status
+📖 **[Read the Complete 400+ Line Master Documentation Report](COMPLETE_PROJECT_REPORT.md)** for exhaustive details on every calculation, pipeline step, and architecture choice.
 
-Phases 0-7 are complete. Phase 8 is prepared locally: the README, results, interview notes, and end-to-end runner are in place. Before calling the public release complete, capture and save the dashboard page screenshots and configure a GitHub remote; neither is configured in this workspace. Issuer-specific coverage and presentation-basis caveats are recorded in `DATA_QUALITY.md`.
+---
 
-## Problem and architecture
+## 🌟 Available User Interfaces
 
-FinPulse turns SEC company filings into comparable quarterly metrics for HPE, Dell, Cisco, IBM, and NetApp, then evaluates revenue forecasts and flags unusual forecast errors or margins for review. The data are latest-restated and have uneven issuer coverage, so this is an analytical prototype rather than an investment or accounting decision system.
+1. **Investor-Grade Web Dashboard (`web/`):** Built with **React 18, TypeScript, Vite, Tailwind CSS, Recharts, and Framer Motion**. Features dark glassmorphism, animated CFO briefing callouts, dynamic confidence intervals, interactive anomaly review drawers, and model comparison leaderboards.
+   - Run locally: `cd web && npm install && npm run dev` (Access at `http://localhost:5173`)
+2. **Streamlit Financial App (`dashboard/`):** Streamlit application with interactive context expanders, CSV download buttons for audit trails, and multi-page corporate financial reviews.
+   - Run locally: `.\.venv\Scripts\python.exe -m streamlit run dashboard\app.py` (Access at `http://localhost:8501`)
+
+---
+
+## Problem and Architecture
+
+FinPulse turns SEC company filings into comparable quarterly metrics for **HPE, Dell, Cisco, IBM, and NetApp**, then evaluates revenue forecasts and flags unusual forecast errors or margins for review. The data are latest-restated and have uneven issuer coverage, so this is an analytical prototype rather than an investment or accounting decision system.
 
 ```mermaid
 flowchart LR
